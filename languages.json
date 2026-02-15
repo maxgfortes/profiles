@@ -1,0 +1,397 @@
+{
+  "pt": {
+    "code": "pt",
+    "name": "Português",
+    "nativeName": "Português (Brasil)",
+    "flag": "🇧🇷",
+    "translations": {
+      "menu": {
+        "title": "Profile's",
+        "home": "Início",
+        "myProfile": "Meu Perfil",
+        "editProfile": "Editar Perfil",
+        "shareProfile": "Compartilhar Meu Perfil",
+        "language": "Idioma",
+        "login": "Entrar",
+        "logout": "Sair"
+      },
+      "profile": {
+        "friends": "amigos",
+        "followers": "seguidores",
+        "following": "seguindo",
+        "edit": "Editar",
+        "shareProfile": "Compartilhar perfil",
+        "verified": "Verificado"
+      },
+      "tabs": {
+        "about": "Visão Geral",
+        "likes": "Gostos",
+        "links": "Links"
+      },
+      "aboutSection": {
+        "searching": "Buscando",
+        "overview": "Visão geral",
+        "myStyle": "Meu Estilo",
+        "myPersonality": "Minha personalidade",
+        "realName": "Nome Real",
+        "gender": "Gênero",
+        "maritalStatus": "Estado Civil",
+        "location": "Localização",
+        "age": "Idade"
+      },
+      "likesSection": {
+        "music": "Músicas",
+        "movies": "Filmes e Séries",
+        "books": "Livros",
+        "characters": "Personagens",
+        "foods": "Comidas e Bebidas",
+        "hobbies": "Hobbies",
+        "games": "Jogos favoritos",
+        "others": "Outros gostos"
+      },
+      "linksSection": {
+        "noLinks": "Nenhum link adicionado",
+        "noLinksDesc": "Este usuário ainda não adicionou links"
+      },
+      "languageModal": {
+        "title": "Selecione o idioma"
+      },
+      "common": {
+        "notInformed": "Não informado",
+        "notProvided": "Não informada",
+        "years": "anos",
+        "nothingHere": "Ainda não há nada por aqui...",
+        "backToHome": "← Voltar para home"
+      },
+      "errors": {
+        "oops": "Ops!",
+        "profileNotFound": "Perfil não encontrado",
+        "completeRegistration": "Perfil não encontrado. Complete seu cadastro.",
+        "loadError": "Erro ao carregar perfil",
+        "loginOrAccess": "Faça login ou acesse um perfil específico usando ?username=usuario"
+      },
+      "gender": {
+        "male": "Masculino",
+        "female": "Feminino",
+        "other": "Outro",
+        "preferNotToSay": "Prefiro não dizer"
+      }
+    }
+  },
+  "en": {
+    "code": "en",
+    "name": "English",
+    "nativeName": "English",
+    "flag": "🇺🇸",
+    "translations": {
+      "menu": {
+        "title": "Profile's",
+        "home": "Home",
+        "myProfile": "My Profile",
+        "editProfile": "Edit Profile",
+        "shareProfile": "Share My Profile",
+        "language": "Language",
+        "login": "Sign In",
+        "logout": "Sign Out"
+      },
+      "profile": {
+        "friends": "friends",
+        "followers": "followers",
+        "following": "following",
+        "edit": "Edit",
+        "shareProfile": "Share profile",
+        "verified": "Verified"
+      },
+      "tabs": {
+        "about": "Overview",
+        "likes": "Likes",
+        "links": "Links"
+      },
+      "aboutSection": {
+        "searching": "Looking for",
+        "overview": "Overview",
+        "myStyle": "My Style",
+        "myPersonality": "My Personality",
+        "realName": "Real Name",
+        "gender": "Gender",
+        "maritalStatus": "Marital Status",
+        "location": "Location",
+        "age": "Age"
+      },
+      "likesSection": {
+        "music": "Music",
+        "movies": "Movies & Series",
+        "books": "Books",
+        "characters": "Characters",
+        "foods": "Food & Drinks",
+        "hobbies": "Hobbies",
+        "games": "Favorite Games",
+        "others": "Other Interests"
+      },
+      "linksSection": {
+        "noLinks": "No links added",
+        "noLinksDesc": "This user hasn't added any links yet"
+      },
+      "languageModal": {
+        "title": "Select language"
+      },
+      "common": {
+        "notInformed": "Not informed",
+        "notProvided": "Not provided",
+        "years": "years old",
+        "nothingHere": "Nothing here yet...",
+        "backToHome": "← Back to home"
+      },
+      "errors": {
+        "oops": "Oops!",
+        "profileNotFound": "Profile not found",
+        "completeRegistration": "Profile not found. Complete your registration.",
+        "loadError": "Error loading profile",
+        "loginOrAccess": "Please login or access a specific profile using ?username=user"
+      },
+      "gender": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other",
+        "preferNotToSay": "Prefer not to say"
+      }
+    }
+  },
+  "es": {
+    "code": "es",
+    "name": "Español",
+    "nativeName": "Español",
+    "flag": "🇪🇸",
+    "translations": {
+      "menu": {
+        "title": "Profile's",
+        "home": "Inicio",
+        "myProfile": "Mi Perfil",
+        "editProfile": "Editar Perfil",
+        "shareProfile": "Compartir Mi Perfil",
+        "language": "Idioma",
+        "login": "Iniciar Sesión",
+        "logout": "Cerrar Sesión"
+      },
+      "profile": {
+        "friends": "amigos",
+        "followers": "seguidores",
+        "following": "siguiendo",
+        "edit": "Editar",
+        "shareProfile": "Compartir perfil",
+        "verified": "Verificado"
+      },
+      "tabs": {
+        "about": "Visión General",
+        "likes": "Me Gusta",
+        "links": "Enlaces"
+      },
+      "aboutSection": {
+        "searching": "Buscando",
+        "overview": "Visión general",
+        "myStyle": "Mi Estilo",
+        "myPersonality": "Mi Personalidad",
+        "realName": "Nombre Real",
+        "gender": "Género",
+        "maritalStatus": "Estado Civil",
+        "location": "Ubicación",
+        "age": "Edad"
+      },
+      "likesSection": {
+        "music": "Música",
+        "movies": "Películas y Series",
+        "books": "Libros",
+        "characters": "Personajes",
+        "foods": "Comidas y Bebidas",
+        "hobbies": "Pasatiempos",
+        "games": "Juegos Favoritos",
+        "others": "Otros Gustos"
+      },
+      "linksSection": {
+        "noLinks": "Sin enlaces agregados",
+        "noLinksDesc": "Este usuario aún no ha agregado enlaces"
+      },
+      "languageModal": {
+        "title": "Seleccionar idioma"
+      },
+      "common": {
+        "notInformed": "No informado",
+        "notProvided": "No proporcionada",
+        "years": "años",
+        "nothingHere": "Aún no hay nada aquí...",
+        "backToHome": "← Volver al inicio"
+      },
+      "errors": {
+        "oops": "¡Ups!",
+        "profileNotFound": "Perfil no encontrado",
+        "completeRegistration": "Perfil no encontrado. Completa tu registro.",
+        "loadError": "Error al cargar el perfil",
+        "loginOrAccess": "Inicia sesión o accede a un perfil específico usando ?username=usuario"
+      },
+      "gender": {
+        "male": "Masculino",
+        "female": "Femenino",
+        "other": "Otro",
+        "preferNotToSay": "Prefiero no decirlo"
+      }
+    }
+  },
+  "ru": {
+    "code": "ru",
+    "name": "Русский",
+    "nativeName": "Русский",
+    "flag": "🇷🇺",
+    "translations": {
+      "menu": {
+        "title": "Profile's",
+        "home": "Главная",
+        "myProfile": "Мой Профиль",
+        "editProfile": "Редактировать Профиль",
+        "shareProfile": "Поделиться Профилем",
+        "language": "Язык",
+        "login": "Войти",
+        "logout": "Выйти"
+      },
+      "profile": {
+        "friends": "друзья",
+        "followers": "подписчики",
+        "following": "подписки",
+        "edit": "Редактировать",
+        "shareProfile": "Поделиться профилем",
+        "verified": "Подтверждён"
+      },
+      "tabs": {
+        "about": "Обзор",
+        "likes": "Интересы",
+        "links": "Ссылки"
+      },
+      "aboutSection": {
+        "searching": "Ищу",
+        "overview": "Обзор",
+        "myStyle": "Мой Стиль",
+        "myPersonality": "Моя Личность",
+        "realName": "Настоящее Имя",
+        "gender": "Пол",
+        "maritalStatus": "Семейное Положение",
+        "location": "Местоположение",
+        "age": "Возраст"
+      },
+      "likesSection": {
+        "music": "Музыка",
+        "movies": "Фильмы и Сериалы",
+        "books": "Книги",
+        "characters": "Персонажи",
+        "foods": "Еда и Напитки",
+        "hobbies": "Хобби",
+        "games": "Любимые Игры",
+        "others": "Другие Интересы"
+      },
+      "linksSection": {
+        "noLinks": "Ссылки не добавлены",
+        "noLinksDesc": "Этот пользователь ещё не добавил ссылки"
+      },
+      "languageModal": {
+        "title": "Выберите язык"
+      },
+      "common": {
+        "notInformed": "Не указано",
+        "notProvided": "Не предоставлено",
+        "years": "лет",
+        "nothingHere": "Здесь пока ничего нет...",
+        "backToHome": "← Вернуться на главную"
+      },
+      "errors": {
+        "oops": "Упс!",
+        "profileNotFound": "Профиль не найден",
+        "completeRegistration": "Профиль не найден. Завершите регистрацию.",
+        "loadError": "Ошибка загрузки профиля",
+        "loginOrAccess": "Войдите или откройте конкретный профиль используя ?username=пользователь"
+      },
+      "gender": {
+        "male": "Мужской",
+        "female": "Женский",
+        "other": "Другой",
+        "preferNotToSay": "Предпочитаю не говорить"
+      }
+    }
+  },
+  "ja": {
+    "code": "ja",
+    "name": "日本語",
+    "nativeName": "日本語",
+    "flag": "🇯🇵",
+    "translations": {
+      "menu": {
+        "title": "Profile's",
+        "home": "ホーム",
+        "myProfile": "マイプロフィール",
+        "editProfile": "プロフィール編集",
+        "shareProfile": "プロフィールを共有",
+        "language": "言語",
+        "login": "ログイン",
+        "logout": "ログアウト"
+      },
+      "profile": {
+        "friends": "友達",
+        "followers": "フォロワー",
+        "following": "フォロー中",
+        "edit": "編集",
+        "shareProfile": "プロフィールを共有",
+        "verified": "認証済み"
+      },
+      "tabs": {
+        "about": "概要",
+        "likes": "好きなもの",
+        "links": "リンク"
+      },
+      "aboutSection": {
+        "searching": "探しているもの",
+        "overview": "概要",
+        "myStyle": "マイスタイル",
+        "myPersonality": "私の性格",
+        "realName": "本名",
+        "gender": "性別",
+        "maritalStatus": "婚姻状況",
+        "location": "場所",
+        "age": "年齢"
+      },
+      "likesSection": {
+        "music": "音楽",
+        "movies": "映画・シリーズ",
+        "books": "本",
+        "characters": "キャラクター",
+        "foods": "食べ物・飲み物",
+        "hobbies": "趣味",
+        "games": "好きなゲーム",
+        "others": "その他の興味"
+      },
+      "linksSection": {
+        "noLinks": "リンクが追加されていません",
+        "noLinksDesc": "このユーザーはまだリンクを追加していません"
+      },
+      "languageModal": {
+        "title": "言語を選択"
+      },
+      "common": {
+        "notInformed": "未記入",
+        "notProvided": "提供されていません",
+        "years": "歳",
+        "nothingHere": "まだ何もありません...",
+        "backToHome": "← ホームに戻る"
+      },
+      "errors": {
+        "oops": "おっと！",
+        "profileNotFound": "プロフィールが見つかりません",
+        "completeRegistration": "プロフィールが見つかりません。登録を完了してください。",
+        "loadError": "プロフィールの読み込みエラー",
+        "loginOrAccess": "ログインするか、?username=ユーザー名を使用して特定のプロフィールにアクセスしてください"
+      },
+      "gender": {
+        "male": "男性",
+        "female": "女性",
+        "other": "その他",
+        "preferNotToSay": "回答しない"
+      }
+    }
+  }
+}

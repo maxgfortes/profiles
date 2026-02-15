@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile's</title>
+  <link rel="icon" href="./src/icon/icon.png" type="image/png" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <meta name="theme-color" content="#0f0f0f" />
+  <link rel="stylesheet" href="./src/styles/root.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: #dbdbdb;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    .main {
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+
+    .welcome-container {
+      padding: 40px 28px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo-main {
+      font-size: 48px;
+      padding: 20px 18px;
+      text-align: center;
+      font-weight: 300;
+    }
+
+    .logo-main span {
+      font-weight: bold;
+      background: linear-gradient(142deg, rgba(162, 0, 255, 1), rgba(255, 64, 172, 1), rgba(255, 174, 0, 1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .welcome-subtitle {
+      padding: 0 18px;
+      text-align: center;
+      color: #888;
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .welcome-btns {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 42px 12px 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .welcome-btns a {
+      background: linear-gradient(142deg, rgba(162, 0, 255, 1), rgba(255, 64, 172, 1), rgba(255, 174, 0, 1));
+      border: none;
+      padding: 16px 32px;
+      color: #fff;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 20px rgba(162, 0, 255, 0.3);
+    }
+
+    .welcome-btns a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 30px rgba(162, 0, 255, 0.5);
+    }
+
+    .criar-conta {
+      min-width: 180px;
+    }
+
+    .entrar {
+      background: transparent !important;
+      border: 2px solid;
+      border-image: linear-gradient(142deg, rgba(162, 0, 255, 1), rgba(255, 64, 172, 1), rgba(255, 174, 0, 1)) 1;
+      box-shadow: none !important;
+    }
+
+    .see-profile {
+      display: none;
+      justify-content: center;
+      padding: 20px 12px;
+    }
+
+    .see-profile.active {
+      display: flex;
+    }
+
+    .see-profile a {
+      background: linear-gradient(142deg, rgba(162, 0, 255, 1), rgba(255, 64, 172, 1), rgba(255, 174, 0, 1));
+      padding: 16px 32px;
+      color: #fff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 400px;
+      font-size: 1.2rem;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .profiles-preview {
+      padding: 30px 0;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .profiles-preview img {
+      width: 100%;
+      border-radius: 16px;
+    }
+
+    .features-section {
+      padding: 60px 28px;
+      background: var(--bg-primary);
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .features-header h2 {
+      font-size: 36px;
+      margin-bottom: 16px;
+      background: linear-gradient(142deg, rgba(162, 0, 255, 1), rgba(255, 64, 172, 1), rgba(255, 174, 0, 1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: transparent;
+      border-radius: 0px;
+      padding: 30px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(162, 0, 255, 0.5);
+    }
+
+    .feature-icon {
+      font-size: 40px;
+      background: linear-gradient(142deg, rgba(162, 0, 255, 1), rgba(255, 64, 172, 1), rgba(255, 174, 0, 1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 22px;
+      margin-bottom: 12px;
+      color: #f8f9f9;
+    }
+
+    .feature-card p {
+      color: #888;
+      line-height: 1.6;
+    }
+
+    .faq-container {
+      padding: 60px 28px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .faq-header h1 {
+      text-align: center;
+      font-size: 36px;
+      margin-bottom: 40px;
+      color: #f8f9f9;
+    }
+
+    .faq-item {
+      background: transparent;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s ease;
+    }
+
+
+
+    .faq-question h3 {
+      font-size: 18px;
+      color: #f8f9f9;
+      font-weight: 600;
+    }
+
+    .faq-icon {
+      font-size: 20px;
+      color: #888;
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .faq-answer-content {
+      padding: 20px 20px 20px;
+      color: #888;
+      line-height: 1.6;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 300px;
+    }
+
+    .footer {
+      padding: 40px 18px;
+      text-align: center;
+      border-top: 1px solid #1a1a1a;
+      margin-top: 60px;
+    }
+
+    .footer p {
+      color: #888;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .logo-main {
+        font-size: 36px;
+      }
+
+      .welcome-subtitle {
+        font-size: 16px;
+      }
+
+      .welcome-btns a {
+        padding: 14px 24px;
+        font-size: 1rem;
+      }
+
+      .features-header h2 {
+        font-size: 28px;
+      }
+
+      .faq-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    .user-info {
+      text-align: center;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px auto;
+      max-width: 400px;
+      display: none;
+    }
+
+    .user-info.active {
+      display: block;
+    }
+
+    .user-info p {
+      color: #f8f9f9;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .user-info span {
+      color: #888;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="welcome-container">
+      <div class="welcome-header">
+        <div class="logo-main">Profile's for <span>Instagram</span></div>
+      </div>
+      <div class="welcome-subtitle">
+        <p>Com o Profile's você consegue ter uma variedade muito maior   de personalizações de perfil para o seu perfil do Instagram</p>
+      </div>
+
+      <div id="userInfo" class="user-info">
+        <p>Olá, <strong id="userName"></strong>!</p>
+        <span>Você já tem uma conta</span>
+      </div>
+
+      <div class="welcome-btns" id="authButtons">
+        <a href="register.html" class="criar-conta">Criar Conta</a>
+        <a href="login.html" class="entrar">Entrar</a>
+      </div>
+
+      <div class="see-profile" id="profileButton">
+        <a href="#" id="profileLink">Ver meu perfil</a>
+      </div>
+
+      <div class="profiles-preview">
+        <img src="https://assets.guns.lol/profile_showcase.png" alt="Preview do Profile's">
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+      <div class="features-header">
+        <h2>Por que usar o Profile's?</h2>
+        <p style="color: #888; max-width: 600px; margin: 0 auto;">Tudo que você precisa para criar um perfil incrível em um só lugar</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-paint-brush"></i></div>
+          <h3>Totalmente Personalizável</h3>
+          <p>Escolha cores, fontes, imagens e crie um perfil único que representa você</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-link"></i></div>
+          <h3>Links Ilimitados</h3>
+          <p>Adicione quantos links quiser para suas redes sociais, projetos e portfólio</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+          <h3>100% Responsivo</h3>
+          <p>Seu perfil fica perfeito em qualquer dispositivo, do celular ao desktop</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+          <h3>Fácil de Usar</h3>
+          <p>Interface intuitiva que permite criar e editar seu perfil em minutos</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3>Seguro e Confiável</h3>
+          <p>Seus dados estão protegidos com Firebase e autenticação segura</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-rocket"></i></div>
+          <h3>Rápido e Leve</h3>
+          <p>Carregamento instantâneo e performance otimizada para a melhor experiência</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-container">
+      <div class="faq-header">
+        <h1>Perguntas Frequentes</h1>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          <h3>O que é o Profile's?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            O Profile's é uma plataforma moderna de perfis personalizados, similar ao Linktree mas com muito mais recursos. Você pode criar um perfil completo com informações sobre você, adicionar links ilimitados e personalizar tudo ao seu estilo.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <h3>É gratuito?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            Sim! O Profile's é 100% gratuito. Você pode criar sua conta, adicionar links ilimitados e personalizar seu perfil sem pagar nada.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <h3>Como compartilho meu perfil?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            Seu perfil tem uma URL única no formato: profile.html?u=seuusername. Você pode compartilhar esse link em qualquer lugar - Instagram, TikTok, Twitter, WhatsApp e mais!
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <h3>Posso mudar meu username depois?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            No momento, o username não pode ser alterado após a criação da conta. Escolha com cuidado! Em futuras atualizações, essa funcionalidade pode ser adicionada.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <h3>Meus dados estão seguros?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            Sim! Usamos Firebase, uma plataforma do Google, para autenticação e armazenamento. Suas senhas são criptografadas e seus dados são protegidos com as melhores práticas de segurança.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Copyright 2025 Profile's - Todos os direitos reservados. Criado por maxgfortes</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCHA1ZPOCOK_zKkfJfYHF2aBFdykIvvOxc",
+      authDomain: "profiles-4-instagram.firebaseapp.com",
+      projectId: "profiles-4-instagram",
+      storageBucket: "profiles-4-instagram.firebasestorage.app",
+      messagingSenderId: "35795561568",
+      appId: "1:35795561568:web:3c539d38409097098ae705"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          
+          document.getElementById('userName').textContent = userData.username || 'Usuário';
+          document.getElementById('userInfo').classList.add('active');
+          document.getElementById('authButtons').style.display = 'none';
+          document.getElementById('profileButton').classList.add('active');
+          document.getElementById('profileLink').href = `profile.html?u=${userData.username}`;
+        }
+      }
+    });
+
+    // FAQ Toggle
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentElement;
+        const wasActive = item.classList.contains('active');
+        
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+        
+        if (!wasActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
