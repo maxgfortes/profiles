@@ -17,11 +17,18 @@
       },
       "profile": {
         "friends": "amigos",
-        "followers": "seguidores",
-        "following": "seguindo",
+        "followers": "visualizações",
+        "following": "segus",
+        "addFriend": "Adicionar amigo",
         "edit": "Editar",
         "shareProfile": "Compartilhar perfil",
-        "verified": "Verificado"
+        "verified": "Verificado",
+        "name": "Nome",
+        "gender": "Gênero",
+        "birthday": "Data de nascimento",
+        "livein": "Mora em",
+        "maritalstatus": "Estado civil",
+        "abouttitle": "Sobre"
       },
       "tabs": {
         "about": "Visão Geral",
@@ -100,7 +107,13 @@
         "following": "following",
         "edit": "Edit",
         "shareProfile": "Share profile",
-        "verified": "Verified"
+        "verified": "Verified",
+        "name": "Name",
+        "gender": "Gender",
+        "birthday": "Birthday",
+        "livein": "Live in",
+        "maritalstatus": "Marital status",
+        "abouttitle": "About"
       },
       "tabs": {
         "about": "Overview",
@@ -179,7 +192,13 @@
         "following": "siguiendo",
         "edit": "Editar",
         "shareProfile": "Compartir perfil",
-        "verified": "Verificado"
+        "verified": "Verificado",
+        "name": "Nombre",
+        "gender": "Género",
+        "birthday": "Fecha de nacimiento",
+        "livein": "Mora en",
+        "maritalstatus": "Estado civil",
+        "abouttitle": "Sobre"
       },
       "tabs": {
         "about": "Visión General",
@@ -258,7 +277,13 @@
         "following": "подписки",
         "edit": "Редактировать",
         "shareProfile": "Поделиться профилем",
-        "verified": "Подтверждён"
+        "verified": "Подтверждён",
+        "name": "Имя",
+        "gender": "Пол",
+        "birthday": "Дата рождения",
+        "livein": "Место проживания",
+        "maritalstatus": "Семейное положение",
+        "abouttitle": "Обо мне"
       },
       "tabs": {
         "about": "Обзор",
@@ -337,7 +362,13 @@
         "following": "フォロー中",
         "edit": "編集",
         "shareProfile": "プロフィールを共有",
-        "verified": "認証済み"
+        "verified": "認証済み",
+        "name": "名前",
+        "gender": "性別",
+        "birthday": "誕生日",
+        "livein": "居住地",
+        "maritalstatus": "婚姻状況",
+        "abouttitle": "概要"
       },
       "tabs": {
         "about": "概要",

@@ -4,7 +4,10 @@ import {
   doc,
   getDoc,
   onSnapshot,
-  collection
+  collection,
+  setDoc,
+  updateDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
@@ -23,67 +26,184 @@ const auth = getAuth(app);
 
 let currentUser = null;
 let isOwnProfile = false;
+let profileUserId = null; // UID do perfil sendo visualizado
+let currentProfileData = null;
+let inlineEditorReady = false;
+let isSavingInlineProfile = false;
+const IMGBB_API_KEY = "fc8497dcdf559dc9cbff97378c82344c";
+
+// Exportar para uso nos outros módulos
+export { db, auth, currentUser, isOwnProfile, profileUserId };
+
+/* ================= SISTEMA DE TRADUÇÃO ================= */
+
+let languages = {};
+let currentLanguage = 'pt';
+
+// Carregar arquivo de idiomas
+async function loadLanguages() {
+  try {
+    const response = await fetch('./languages.json');
+    languages = await response.json();
+    
+    // Carregar idioma salvo ou usar português como padrão
+    currentLanguage = localStorage.getItem('selectedLanguage') || 'pt';
+    applyTranslations();
+  } catch (error) {
+    console.error('Erro ao carregar idiomas:', error);
+    // Se falhar, usar português como padrão
+    currentLanguage = 'pt';
+  }
+}
+
+// Função para pegar tradução
+function t(path) {
+  try {
+    const keys = path.split('.');
+    let value = languages[currentLanguage]?.translations;
+    
+    for (const key of keys) {
+      value = value?.[key];
+    }
+    
+    return value || path;
+  } catch (error) {
+    console.warn('Tradução não encontrada:', path);
+    return path;
+  }
+}
+
+// Exportar função de tradução
+export { t };
+
+/*  Aplicar traduções na página
+function applyTranslations() {
+  // Menu
+  document.querySelector('.menu-header h3').textContent = t('menu.title');
+  
+  const menuItems = document.querySelectorAll('.menu-item-link span');
+  menuItems[0].textContent = t('menu.home'); // Início
+  menuItems[1].textContent = t('menu.myProfile'); // Meu Perfil
+  menuItems[2].textContent = t('menu.editProfile'); // Editar Perfil
+  menuItems[3].textContent = t('menu.shareProfile'); // Compartilhar
+  menuItems[4].textContent = t('menu.language'); // Idioma
+  
+  // Seção de login/logout
+  document.querySelector('.section-title').textContent = t('menu.login');
+  document.querySelector('.menu-item-link.login span').textContent = t('menu.login');
+  document.querySelector('.menu-item-link.logoff span').textContent = t('menu.logout');
+  
+  // Stats do perfil
+  document.querySelectorAll('.stat-label')[0].textContent = t('profile.friends');
+  document.querySelectorAll('.stat-label')[1].textContent = t('profile.followers');
+  document.querySelectorAll('.stat-label')[2].textContent = t('profile.following');
+  
+  
+  // Botões de ação
+  const actionBtns = document.querySelectorAll('.action-btn');
+  if (actionBtns[0]) actionBtns[0].textContent = t('profile.addFriend');
+  if (actionBtns[0]) actionBtns[1].textContent = t('profile.edit');
+  if (actionBtns[1]) actionBtns[2].textContent = t('profile.shareProfile');
+
+  document.querySelectorAll('.info-label')[0].textContent = t('profile.name');
+  document.querySelectorAll('.info-label')[1].textContent = t('profile.gender');
+  document.querySelectorAll('.info-label')[2].textContent = t('profile.maritalstatus');
+  document.querySelectorAll('.info-label')[3].textContent = t('profile.livein');
+  document.querySelectorAll('.info-label')[4].textContent = t('profile.birthday');
+  
+  // Tabs do profile-menu NÃO são traduzidas (só têm ícones)
+  
+  // Modal de idiomas
+  document.querySelector('.language-header h3').textContent = t('languageModal.title');
+}
+
+// Atualizar idioma
+function changeLanguage(langCode) {
+  currentLanguage = langCode;
+  localStorage.setItem('selectedLanguage', langCode);
+  applyTranslations();
+  
+  // Re-preencher seções se os dados já estiverem carregados
+  const aboutContainer = document.querySelector('.visao-tab .about-container');
+  if (aboutContainer && aboutContainer.children.length > 0) {
+    // Recarregar as traduções das seções
+    updateSectionTranslations();
+  }
+}
+
+// Atualizar traduções das seções dinâmicas
+function updateSectionTranslations() {
+  // Atualizar títulos da seção About
+  const aboutTitles = document.querySelectorAll('.visao-tab .about-title');
+  const aboutKeys = ['searching', 'overview', 'myStyle', 'myPersonality'];
+  aboutTitles.forEach((title, index) => {
+    if (aboutKeys[index]) {
+      title.textContent = t(`aboutSection.${aboutKeys[index]}`);
+    }
+  });
+  
+  // Atualizar títulos da seção Gostos
+  const likesTitles = document.querySelectorAll('.gostos-tab .about-title');
+  const likesKeys = ['music', 'movies', 'books', 'characters', 'foods', 'hobbies', 'games', 'others'];
+  likesTitles.forEach((title, index) => {
+    if (likesKeys[index]) {
+      title.textContent = t(`likesSection.${likesKeys[index]}`);
+    }
+  });
+}
 
 /* ================= SISTEMA DE CACHE ================= */
 
 const CACHE_KEY_PREFIX = 'profile_cache_';
-const CACHE_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 dias em milissegundos
+const CACHE_DURATION    = 7 * 24 * 60 * 60 * 1000;  // 7 dias — válido para exibir
+const CACHE_STALE       = 5 * 60 * 1000;             // 5 min — revalida em background se mais velho
 
 function salvarNoCache(username, dados) {
   try {
-    const cacheData = {
-      timestamp: Date.now(),
-      data: dados
-    };
-    localStorage.setItem(CACHE_KEY_PREFIX + username.toLowerCase(), JSON.stringify(cacheData));
-  } catch (error) {
-    console.warn('Erro ao salvar cache:', error);
+    localStorage.setItem(
+      CACHE_KEY_PREFIX + username.toLowerCase(),
+      JSON.stringify({ timestamp: Date.now(), data: dados })
+    );
+  } catch (e) {
+    // localStorage cheio — limpa tudo do app e tenta de novo
+    limparCacheAntigo(true);
+    try {
+      localStorage.setItem(
+        CACHE_KEY_PREFIX + username.toLowerCase(),
+        JSON.stringify({ timestamp: Date.now(), data: dados })
+      );
+    } catch (_) {}
   }
 }
 
 function buscarNoCache(username) {
   try {
-    const cached = localStorage.getItem(CACHE_KEY_PREFIX + username.toLowerCase());
-    if (!cached) return null;
-
-    const cacheData = JSON.parse(cached);
-    const agora = Date.now();
-
-    // Verificar se o cache ainda é válido (30 dias)
-    if (agora - cacheData.timestamp > CACHE_DURATION) {
-      // Cache expirado, remover
+    const raw = localStorage.getItem(CACHE_KEY_PREFIX + username.toLowerCase());
+    if (!raw) return null;
+    const { timestamp, data } = JSON.parse(raw);
+    if (Date.now() - timestamp > CACHE_DURATION) {
       localStorage.removeItem(CACHE_KEY_PREFIX + username.toLowerCase());
       return null;
     }
-
-    return cacheData.data;
-  } catch (error) {
-    console.warn('Erro ao buscar cache:', error);
+    // devolve os dados + flag indicando se precisa revalidar
+    data.__stale = (Date.now() - timestamp) > CACHE_STALE;
+    return data;
+  } catch (e) {
     return null;
   }
 }
 
-function limparCacheAntigo() {
+function limparCacheAntigo(force = false) {
   try {
-    const agora = Date.now();
-    const keys = Object.keys(localStorage);
-    
-    keys.forEach(key => {
-      if (key.startsWith(CACHE_KEY_PREFIX)) {
-        try {
-          const cacheData = JSON.parse(localStorage.getItem(key));
-          if (agora - cacheData.timestamp > CACHE_DURATION) {
-            localStorage.removeItem(key);
-          }
-        } catch (e) {
-          // Se houver erro ao parsear, remover o item
-          localStorage.removeItem(key);
-        }
-      }
+    Object.keys(localStorage).forEach(key => {
+      if (!key.startsWith(CACHE_KEY_PREFIX)) return;
+      if (force) { localStorage.removeItem(key); return; }
+      try {
+        const { timestamp } = JSON.parse(localStorage.getItem(key));
+        if (Date.now() - timestamp > CACHE_DURATION) localStorage.removeItem(key);
+      } catch { localStorage.removeItem(key); }
     });
-  } catch (error) {
-    console.warn('Erro ao limpar cache antigo:', error);
-  }
+  } catch {}
 }
 
 /* ================= CORES (sem transparência) ================= */
@@ -143,7 +263,7 @@ function getUsernameFromURL() {
 }
 
 function calcularIdade(nascimento) {
-  if (!nascimento) return 'Não informada';
+  if (!nascimento) return t('common.notInformed');
   const hoje = new Date();
   const nasc = nascimento.toDate ? nascimento.toDate() : new Date(nascimento);
   let idade = hoje.getFullYear() - nasc.getFullYear();
@@ -151,26 +271,30 @@ function calcularIdade(nascimento) {
   if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) {
     idade--;
   }
-  return idade + ' anos';
+  return idade + ' ' + t('common.years');
 }
 
 function traduzirGenero(genero) {
   const generos = {
-    'masculino': 'Masculino',
-    'feminino': 'Feminino',
-    'outro': 'Outro',
-    'prefiro_nao_dizer': 'Prefiro não dizer'
+    'masculino': t('gender.male'),
+    'feminino': t('gender.female'),
+    'outro': t('gender.other'),
+    'prefiro_nao_dizer': t('gender.preferNotToSay'),
+    'male': t('gender.male'),
+    'female': t('gender.female'),
+    'other': t('gender.other'),
+    'prefer_not_to_say': t('gender.preferNotToSay')
   };
-  return generos[genero?.toLowerCase()] || 'Não informado';
+  return generos[genero?.toLowerCase()] || t('common.notInformed');
 }
 
 function mostrarErro(mensagem) {
   document.querySelector('.full-profile-container').innerHTML = `
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px;">
       <i class="fas fa-exclamation-circle" style="font-size: 64px; color: #f85149; margin-bottom: 20px;"></i>
-      <h2 style="color: #f8f9f9; margin-bottom: 10px;">Ops!</h2>
+      <h2 style="color: #f8f9f9; margin-bottom: 10px;">${t('errors.oops')}</h2>
       <p style="color: #aaa; text-align: center;">${mensagem}</p>
-      <a href="index.html" style="margin-top: 20px; color: #4A90E2; text-decoration: none;">← Voltar para home</a>
+      <a href="index.html" style="margin-top: 20px; color: #4A90E2; text-decoration: none;">${t('common.backToHome')}</a>
     </div>
   `;
 }
@@ -179,37 +303,24 @@ function mostrarErro(mensagem) {
 
 async function carregarDadosUsuario(uid) {
   try {
-    // Documento principal do usuário
-    const userDoc = await getDoc(doc(db, "users", uid));
-    if (!userDoc.exists()) {
-      mostrarErro("Perfil não encontrado");
-      return null;
-    }
+    // Todas as leituras em paralelo — reduz latência de 4x para 1x
+    const [userDoc, mediaDoc, likesDoc, aboutDoc, moreInfosDoc] = await Promise.all([
+      getDoc(doc(db, "users", uid)),
+      getDoc(doc(db, `users/${uid}/user-infos/user-media`)),
+      getDoc(doc(db, `users/${uid}/user-infos/likes`)),
+      getDoc(doc(db, `users/${uid}/user-infos/about`)),
+      getDoc(doc(db, `users/${uid}/user-infos/more-infos`)),
+    ]);
 
-    const userData = userDoc.data();
-
-    // Carregar mídia (pfp, banner, cores)
-    const mediaDoc = await getDoc(doc(db, `users/${uid}/user-infos/user-media`));
-    const mediaData = mediaDoc.exists() ? mediaDoc.data() : {};
-
-    // Carregar gostos/likes
-    const likesDoc = await getDoc(doc(db, `users/${uid}/user-infos/likes`));
-    const likesData = likesDoc.exists() ? likesDoc.data() : {};
-
-    // Carregar sobre
-    const aboutDoc = await getDoc(doc(db, `users/${uid}/user-infos/about`));
-    const aboutData = aboutDoc.exists() ? aboutDoc.data() : {};
-
-    // Carregar more-infos (bio)
-    const moreInfosDoc = await getDoc(doc(db, `users/${uid}/user-infos/more-infos`));
-    const moreInfosData = moreInfosDoc.exists() ? moreInfosDoc.data() : {};
+    if (!userDoc.exists()) { mostrarErro("Perfil não encontrado"); return null; }
 
     return {
-      ...userData,
-      media: mediaData,
-      likes: likesData,
-      about: aboutData,
-      moreInfos: moreInfosData
+      ...userDoc.data(),
+      uid,
+      media:     mediaDoc.exists()     ? mediaDoc.data()     : {},
+      likes:     likesDoc.exists()     ? likesDoc.data()     : {},
+      about:     aboutDoc.exists()     ? aboutDoc.data()     : {},
+      moreInfos: moreInfosDoc.exists() ? moreInfosDoc.data() : {},
     };
   } catch (error) {
     console.error("Erro ao carregar dados:", error);
@@ -218,76 +329,73 @@ async function carregarDadosUsuario(uid) {
 }
 
 async function carregarPerfilPorUsername(username) {
+  const usernameKey = username.toLowerCase();
+
   try {
-    // Tentar buscar no cache primeiro
     const dadosCache = buscarNoCache(username);
-    
+
     if (dadosCache) {
-      console.log('Carregando perfil do cache...');
+      // Exibe instantaneamente do cache
       preencherPerfil(dadosCache);
-      
-      // Buscar UID para listeners em tempo real
-      const usernameDoc = await getDoc(doc(db, "usernames", username.toLowerCase()));
-      if (usernameDoc.exists()) {
-        const uid = usernameDoc.data().uid;
-        isOwnProfile = currentUser && currentUser.uid === uid;
-        setupRealtimeListeners(uid);
+
+      // Busca UID e decide se revalida — tudo em paralelo
+      const usernameDoc = await getDoc(doc(db, "usernames", usernameKey));
+      if (!usernameDoc.exists()) return;
+
+      const uid = usernameDoc.data().uid;
+      profileUserId = uid;
+      isOwnProfile  = currentUser && currentUser.uid === uid;
+
+      // Listeners em tempo real sempre ativos
+      setupRealtimeListeners(uid);
+      initDynamicModules(uid);
+
+      // Revalida cache em background se stale
+      if (dadosCache.__stale) {
+        carregarDadosUsuario(uid).then(dados => {
+          if (dados) salvarNoCache(username, dados);
+        });
       }
-      
-      // Atualizar cache em background
-      atualizarCacheEmBackground(username);
       return;
     }
 
-    // Se não há cache, carregar normalmente
-    console.log('Carregando perfil do Firestore...');
-    
-    // Buscar UID pelo username
-    const usernameDoc = await getDoc(doc(db, "usernames", username.toLowerCase()));
-    
-    if (!usernameDoc.exists()) {
-      mostrarErro("Perfil não encontrado");
-      return;
-    }
+    // Sem cache — busca UID e dados em paralelo
+    const usernameDoc = await getDoc(doc(db, "usernames", usernameKey));
+    if (!usernameDoc.exists()) { mostrarErro("Perfil não encontrado"); return; }
 
     const uid = usernameDoc.data().uid;
-    
-    // Verificar se é o próprio perfil
-    isOwnProfile = currentUser && currentUser.uid === uid;
-    
-    // Carregar todos os dados
+    profileUserId = uid;
+    isOwnProfile  = currentUser && currentUser.uid === uid;
+
     const dadosCompletos = await carregarDadosUsuario(uid);
-    
-    if (dadosCompletos) {
-      preencherPerfil(dadosCompletos);
-      
-      // Salvar no cache
-      salvarNoCache(username, dadosCompletos);
-      
-      // Listener em tempo real
-      setupRealtimeListeners(uid);
-    }
+    if (!dadosCompletos) return;
+
+    preencherPerfil(dadosCompletos);
+    salvarNoCache(username, dadosCompletos);
+    setupRealtimeListeners(uid);
+    initDynamicModules(uid);
+
   } catch (error) {
     console.error("Erro ao carregar perfil:", error);
     mostrarErro("Erro ao carregar perfil");
   }
 }
 
-async function atualizarCacheEmBackground(username) {
+// Inicializar módulos dinâmicos (botões e contadores)
+async function initDynamicModules(uid) {
   try {
-    const usernameDoc = await getDoc(doc(db, "usernames", username.toLowerCase()));
-    if (usernameDoc.exists()) {
-      const uid = usernameDoc.data().uid;
-      const dadosCompletos = await carregarDadosUsuario(uid);
-      if (dadosCompletos) {
-        salvarNoCache(username, dadosCompletos);
-        console.log('Cache atualizado em background');
-      }
-    }
+    // Importar e inicializar botões dinâmicos
+    const buttonsModule = await import('./src/js/buttons-dynamic.js');
+    await buttonsModule.initButtons(isOwnProfile, uid);
+    
+    // Importar e inicializar contadores
+    const counterModule = await import('./src/js/counter.js');
+    counterModule.initCounters(uid);
   } catch (error) {
-    console.warn('Erro ao atualizar cache em background:', error);
+    console.error('Erro ao inicializar módulos dinâmicos:', error);
   }
 }
+
 
 /* ================= LISTENERS EM TEMPO REAL ================= */
 
@@ -331,35 +439,37 @@ function setupRealtimeListeners(uid) {
 /* ================= PREENCHER PERFIL ================= */
 
 function preencherPerfil(dados) {
-  // Nome e username - usa displayName se existir, senão usa name
+  currentProfileData = dados;
+
   const displayName = dados.displayName || dados.name || 'Usuário';
   const username = dados.username || 'usuario';
   
   document.getElementById('displayname').textContent = displayName;
-  document.getElementById('headername').textContent = username; // Sempre usa username na navbar
-  document.getElementById('username').textContent = '' + username;
-  document.getElementById('nomeUsuario').textContent = username;
+  document.getElementById('headername').textContent = username;
+  document.getElementById('view-more-username').textContent = displayName;
+
+  const usernameEl = document.getElementById('username');
+  if (usernameEl) {
+    // Pronomes
+    const pronomes = [];
+    if (dados.about?.pronom1) pronomes.push(dados.about.pronom1);
+    if (dados.about?.pronom2) pronomes.push(dados.about.pronom2);
+    if (pronomes.length > 0) {
+      usernameEl.innerHTML = `<span style="color:#888;font-size:0.9em;">${pronomes.join('/')}</span>`;
+    } else {
+      usernameEl.textContent = '@' + username;
+    }
+  }
+
+  const nomeUsuarioEl = document.getElementById('nomeUsuario');
+  if (nomeUsuarioEl) nomeUsuarioEl.textContent = username;
 
   // Bio
   const bioElement = document.getElementById('bio');
-  if (bioElement) {
-    bioElement.textContent = dados.moreInfos?.bio || '';
-  }
-
-  // Pronomes (ao lado do username)
-  const pronomes = [];
-  if (dados.about?.pronom1) pronomes.push(dados.about.pronom1);
-  if (dados.about?.pronom2) pronomes.push(dados.about.pronom2);
-  
-  if (pronomes.length > 0) {
-    const handleElement = document.getElementById('username');
-    handleElement.innerHTML = `<span style="color: #888; font-size: 0.9em;">${pronomes.join('/')}</span>`;
-  }
+  if (bioElement) bioElement.textContent = dados.moreInfos?.bio || '';
 
   // Foto de perfil
-  if (dados.media?.pfp) {
-    document.querySelector('.profile-pic').src = dados.media.pfp;
-  }
+  if (dados.media?.pfp) document.querySelector('.profile-pic').src = dados.media.pfp;
 
   // Banner
   if (dados.media?.banner) {
@@ -367,93 +477,88 @@ function preencherPerfil(dados) {
   }
 
   // Verificado
-  if (dados.verified) {
-    document.querySelector('.verificado').classList.add('active');
-  }
-  
-
-  // Informações básicas
-  document.getElementById('nomeRealUsuario').textContent = 
-  dados.name || 'Não informado';
-
-  document.getElementById('generoUsuario').textContent = 
-    traduzirGenero(dados.gender) || 'Não informado';
-  
-  document.getElementById('estadoCivilUsuario').textContent = 
-    dados.about?.maritalStatus || 'Não informado';
-  
-  document.getElementById('localizacaoUsuario').textContent = 
-    dados.about?.location || dados.location || 'Não informada';
-  
-  document.getElementById('idadeUsuario').textContent = 
-    calcularIdade(dados.birthDate);
+  if (dados.verified) document.querySelector('.verificado').classList.add('active');
 
   // Música
-  if (dados.likes?.music) {
-    document.getElementById('musicTitle').textContent = dados.likes.music;
-  }
+  if (dados.likes?.music) document.getElementById('musicTitle').textContent = dados.likes.music;
 
-
-  // Preencher seção "Sobre"
-  preencherSecaoAbout(dados.about || {});
-
-  // Preencher seção "Gostos"
-  preencherSecaoGostos(dados.likes || {});
-
-  // Preencher links
+  // Preencher links (tab 3 — mantida)
   carregarLinks(dados.links || []);
+
+  // Posts e Reposts (tabs 1 e 2)
+  carregarPosts();
+  carregarReposts();
+
+  // Preencher modal com todas as informações
+  preencherModalInfos(dados);
+
+  if (isOwnProfile) setupInlineEditor();
 }
 
-/* ================= PREENCHER SEÇÕES ================= */
+/* ================= PREENCHER MODAL ================= */
+
+function preencherModalInfos(dados) {
+  const el = (cls) => document.querySelector(`.${cls} span`);
+  const set = (cls, value, fallback = 'Não informado') => {
+    const node = el(cls);
+    if (node) node.textContent = value || fallback;
+  };
+
+  // Título do modal
+  const usernameModal = document.getElementById('username-modal');
+  if (usernameModal) usernameModal.textContent = dados.displayName || dados.name || dados.username || 'usuário';
+
+  // Informações básicas
+  set('modal-info-nome',         dados.name);
+  set('modal-info-genero',       traduzirGenero(dados.gender));
+  set('modal-info-aniversario',  formatarAniversarioModal(dados.birthDate));
+  set('modal-info-estado-civil', dados.about?.maritalStatus);
+  set('modal-info-entrou',       formatarDataEntradaModal(dados.createdAt));
+  set('modal-info-buscando',     dados.about?.searching);
+  set('modal-info-localizacao',  dados.about?.location || dados.location);
+
+  // Sobre
+  set('modal-info-overview',    dados.about?.overview,    'Ainda não há nada por aqui...');
+  set('modal-info-style',       dados.about?.style,       'Ainda não há nada por aqui...');
+  set('modal-info-personality', dados.about?.personality, 'Ainda não há nada por aqui...');
+
+  // Gostos
+  set('modal-info-music',       dados.likes?.music,       'Ainda não há nada por aqui...');
+  set('modal-info-movies',      dados.likes?.movies,      'Ainda não há nada por aqui...');
+  set('modal-info-books',       dados.likes?.books,       'Ainda não há nada por aqui...');
+  set('modal-info-characters',  dados.likes?.characters,  'Ainda não há nada por aqui...');
+  set('modal-info-foods',       dados.likes?.foods,       'Ainda não há nada por aqui...');
+  set('modal-info-hobbies',     dados.likes?.hobbies,     'Ainda não há nada por aqui...');
+  set('modal-info-games',       dados.likes?.games,       'Ainda não há nada por aqui...');
+  set('modal-info-others',      dados.likes?.others,      'Ainda não há nada por aqui...');
+}
+
+function formatarAniversarioModal(birthDate) {
+  if (!birthDate) return null;
+  try {
+    const d = birthDate.toDate ? birthDate.toDate() : new Date(birthDate);
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' });
+  } catch { return null; }
+}
+
+function formatarDataEntradaModal(createdAt) {
+  if (!createdAt) return null;
+  try {
+    const d = createdAt.toDate ? createdAt.toDate() : new Date(createdAt);
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  } catch { return null; }
+}
+
+/* ================= PREENCHER SEÇÕES (desativadas das tabs) ================= */
 
 function preencherSecaoAbout(about) {
-  const aboutContainer = document.querySelector('.visao-tab .about-container');
-  
-  const secoes = [
-    { titulo: 'Buscando', campo: 'searching', key: 'searching' },
-    { titulo: 'Visão geral', campo: 'overview', key: 'overview' },
-    { titulo: 'Meu Estilo', campo: 'style', key: 'style' },
-    { titulo: 'Minha personalidade', campo: 'personality', key: 'personality' },
-  ];
-
-  const html = secoes.map(secao => {
-    const conteudo = about[secao.key] || 'Ainda não há nada por aqui...';
-    return `
-      <div class="about-box">
-        <p class="about-title">${secao.titulo}</p>
-        <p>${conteudo}</p>
-      </div>
-    `;
-  }).join('');
-
-  aboutContainer.innerHTML = html;
+  // Renderização removida das tabs — dados agora exibidos apenas no modal
+  if (currentProfileData) preencherModalInfos(currentProfileData);
 }
 
 function preencherSecaoGostos(likes) {
-  const gostosContainer = document.querySelector('.gostos-tab .about-container');
-  
-  const secoes = [
-    { titulo: 'Músicas', key: 'music' },
-    { titulo: 'Filmes e Séries', key: 'movies' },
-    { titulo: 'Livros', key: 'books' },
-    { titulo: 'Personagens', key: 'characters' },
-    { titulo: 'Comidas e Bebidas', key: 'foods' },
-    { titulo: 'Hobbies', key: 'hobbies' },
-    { titulo: 'Jogos favoritos', key: 'games' },
-    { titulo: 'Outros gostos', key: 'others' }
-  ];
-
-  const html = secoes.map(secao => {
-    const conteudo = likes[secao.key] || 'Ainda não há nada por aqui...';
-    return `
-      <div class="about-box">
-        <p class="about-title">${secao.titulo}</p>
-        <p>${conteudo}</p>
-      </div>
-    `;
-  }).join('');
-
-  gostosContainer.innerHTML = html;
+  // Renderização removida das tabs — dados agora exibidos apenas no modal
+  if (currentProfileData) preencherModalInfos(currentProfileData);
 }
 
 function carregarLinks(links) {
@@ -463,8 +568,8 @@ function carregarLinks(links) {
     linksContainer.innerHTML = `
       <div class="about-box" style="text-align: center; padding: 20px;">
       <div class="icon-area"><div class="icon-place"><i class="fas fa-link" style="font-size: 38px; color: #f8f9f9; ;"></i></div></div>
-        <h3 style="color: #f8f9f9; margin-bottom: 12px;">Nenhum link adicionado</h3>
-        <p style="color: #aaa;">Este usuário ainda não adicionou links</p>
+        <h3 style="color: #f8f9f9; margin-bottom: 12px;">${t('linksSection.noLinks')}</h3>
+        <p style="color: #aaa;">${t('linksSection.noLinksDesc')}</p>
       </div>
     `;
     return;
@@ -495,18 +600,57 @@ function carregarLinks(links) {
   linksContainer.innerHTML = html;
 }
 
+function carregarPosts() {
+  const postsContainer = document.querySelector('.visao-tab');
+  if (!postsContainer) return;
+
+  postsContainer.innerHTML = `
+    <div class="about-box" style="text-align: center; padding: 20px;">
+      <div class="icon-area"><div class="icon-place"><i class="fa-regular fa-camera" style="font-size: 38px; color: #f8f9f9;"></i></div></div>
+      <h3 style="color: #f8f9f9; margin-bottom: 12px;">Nenhum post ainda</h3>
+      <p style="color: #aaa;">Quando houver posts, eles aparecerão aqui.</p>
+    </div>
+  `;
+}
+
+function carregarReposts() {
+  const repostsContainer = document.querySelector('.gostos-tab');
+  if (!repostsContainer) return;
+
+  repostsContainer.innerHTML = `
+    <div class="about-box" style="text-align: center; padding: 20px;">
+      <div class="icon-area"><div class="icon-place"><i class="fa-solid fa-repeat" style="font-size: 38px; color: #f8f9f9;"></i></div></div>
+      <h3 style="color: #f8f9f9; margin-bottom: 12px;">Nenhum repost ainda</h3>
+      <p style="color: #aaa;">Quando houver reposts, eles aparecerão aqui.</p>
+    </div>
+  `;
+}
+
+
 /* ================= ATUALIZAÇÕES EM TEMPO REAL ================= */
 
 function atualizarDadosPrincipais(dados) {
+  currentProfileData = { ...(currentProfileData || {}), ...dados };
+
   const displayName = dados.displayName || dados.name || 'Usuário';
   const username = dados.username || 'usuario';
   
   document.getElementById('displayname').textContent = displayName;
-  document.getElementById('headername').textContent = username; // Sempre usa username na navbar
-  document.getElementById('generoUsuario').textContent = traduzirGenero(dados.gender);
+  document.getElementById('view-more-username').textContent = displayName;
+  document.getElementById('headername').textContent = username;
+
+  if (currentProfileData) preencherModalInfos(currentProfileData);
 }
 
 function atualizarMidia(media) {
+  currentProfileData = {
+    ...(currentProfileData || {}),
+    media: {
+      ...(currentProfileData?.media || {}),
+      ...media
+    }
+  };
+
   if (media.pfp) {
     document.querySelector('.profile-pic').src = media.pfp;
   }
@@ -536,33 +680,42 @@ function atualizarMidia(media) {
 }
 
 function atualizarLikes(likes) {
-  preencherSecaoGostos(likes);
-  if (likes.music) {
-    document.getElementById('musicTitle').textContent = likes.music;
-  }
+  currentProfileData = {
+    ...(currentProfileData || {}),
+    likes: { ...(currentProfileData?.likes || {}), ...likes }
+  };
+
+  if (likes.music) document.getElementById('musicTitle').textContent = likes.music;
+  if (currentProfileData) preencherModalInfos(currentProfileData);
 }
 
 function atualizarAbout(about) {
+  currentProfileData = {
+    ...(currentProfileData || {}),
+    about: { ...(currentProfileData?.about || {}), ...about }
+  };
+
   preencherSecaoAbout(about);
-  
-  // Atualizar localização
-  if (about.location) {
-    document.getElementById('localizacaoUsuario').textContent = about.location;
-  }
-  
-  // Atualizar pronomes
+
+  // Pronomes
   const pronomes = [];
   if (about.pronom1) pronomes.push(about.pronom1);
   if (about.pronom2) pronomes.push(about.pronom2);
-  
-  if (pronomes.length > 0) {
-    const username = document.getElementById('username').textContent.replace('@', '').split(' ')[0];
-    document.getElementById('username').innerHTML = 
-      `<span style="color: #888; font-size: 0.9em;">${pronomes.join('/')}</span>`;
+  const usernameEl = document.getElementById('username');
+  if (pronomes.length > 0 && usernameEl) {
+    usernameEl.innerHTML = `<span style="color:#888;font-size:0.9em;">${pronomes.join('/')}</span>`;
   }
 }
 
 function atualizarMoreInfos(moreInfos) {
+  currentProfileData = {
+    ...(currentProfileData || {}),
+    moreInfos: {
+      ...(currentProfileData?.moreInfos || {}),
+      ...moreInfos
+    }
+  };
+
   // Atualizar bio
   const bioElement = document.getElementById('bio');
   if (bioElement && moreInfos.bio) {
@@ -570,13 +723,13 @@ function atualizarMoreInfos(moreInfos) {
   }
 }
 
-/* ================= BOTÃO EDITAR ================= */
-
-
 /* ================= INICIALIZAÇÃO ================= */
 
 // Limpar cache antigo na inicialização
 limparCacheAntigo();
+
+// Carregar idiomas
+loadLanguages();
 
 onAuthStateChanged(auth, async (user) => {
   currentUser = user;
@@ -594,14 +747,17 @@ onAuthStateChanged(auth, async (user) => {
         const userData = userDoc.data();
         window.location.href = `profile.html?username=${userData.username}`;
       } else {
-        mostrarErro("Perfil não encontrado. Complete seu cadastro.");
+        mostrarErro(t('errors.completeRegistration'));
       }
     } catch (error) {
       console.error("Erro ao buscar usuário:", error);
-      mostrarErro("Erro ao carregar perfil");
+      mostrarErro(t('errors.loadError'));
     }
   } else {
     // Não logado e sem username na URL
-    mostrarErro("Faça login ou acesse um perfil específico usando ?username=usuario");
+    mostrarErro(t('errors.loginOrAccess'));
   }
 });
+
+// Exportar função de mudança de idioma para uso no HTML
+window.changeLanguage = changeLanguage;

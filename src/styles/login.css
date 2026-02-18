@@ -102,24 +102,7 @@ input:focus {
   border-color: var(--primary-color);
 }
 
-.entrarBtn {
-  margin-top: 10px;
-  background: #444;
-  color: #fff;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
-}
 
-.entrarBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 113, 227, 0.4);
-}
 
 .entrarBtn:active {
   transform: translateY(0);
