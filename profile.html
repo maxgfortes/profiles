@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile's</title>
+  <title>Profile</title>
+  <link rel="manifest" href="/manifest.json">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="./src/styles/profile.css">
   <link rel="stylesheet" href="./src/styles/base.css">
-  <link rel="stylesheet" href="./src/styles/navbar-bottom.css">
   <link rel="stylesheet" href="./src/styles/root.css" />
   <link rel="icon" href="./src/icon/icon.png" type="image/png" />
-  <link rel="manifest" href="/manifest.json" />
   <!-- Para o notch/barra de status -->
-  <meta name="theme-color" content="#020202">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f0f0f"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="screen-orientation" content="portrait">
   <meta name="x5-orientation" content="portrait">
@@ -34,7 +32,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: #0b0d14cc;
+      background: #0f0f0fcc;
       z-index: 1000000;
       display: flex;
       align-items: flex-end;
@@ -181,6 +179,13 @@
 
     /* Modal "Ver mais" — escondido por padrão */
     .more-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      bottom: 0;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.35s ease;
@@ -188,6 +193,7 @@
     .more-overlay.active {
       opacity: 1;
       pointer-events: all;
+      height: 100vh;
     }
     .more-info-modal {
       transform: translateY(100%);
@@ -220,6 +226,30 @@
       margin-top: -52px;
     }
 
+    
+.more-overlay {
+  position: fixed;
+  background-color: var(--bg-modal);
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100vw;
+  height: 100vh;
+}
+
+.more-info-modal {
+  background-color: #212327;
+  bottom: 0 !important;
+  height: 86vh;
+  width: 100% !important;
+  border-radius: 32px 32px 0 0;
+  padding: 0 22px;
+}
+
+
+    
+
     /* Responsividade */
     @media (min-width: 768px) {
       .language-content {
@@ -228,107 +258,147 @@
         margin-bottom: 40px;
       }
     }
-  </style>
 
+
+        * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-image: url('./src/img/bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+      min-height: 100vh;
+      min-width: 100vw;
+      overflow-y: auto;
+      overflow-x: hidden;
+      color: var(--text-primary);
+      user-select: none !important;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+.page-content-pc-container {
+  padding: 80px 38px 18px 250px;
+  width: 100vw;
+  height: 100vh;
+}
+
+
+.page-pc-area {
+    overflow: auto;
+    position: relative;
+    height: 100%;
+    overflow-x: hidden;
+    width: 100%;
+    border: 1px solid #222;
+    border-radius: 12px;
+    background-color: rgba(18, 18, 18, 0.60);
+}
+
+
+    @media (max-width: 900px) {
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary) !important;
+      background-image: none;
+      min-height: 100vh;
+      min-width: 100vw;
+      overflow-y: auto;
+      overflow-x: hidden;
+      color: var(--text-primary);
+      user-select: none !important;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .page-content-pc-container {
+      padding: 0;
+    }
+  
+
+    .page-pc-area {
+    overflow: auto;
+    position: relative;
+    height: 100%;
+    overflow-x: hidden;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+}
+
+    
+    }
+
+</style>
 </head>
 <body>
 
-  <div class="navbar-bottom">
-    <div class="navbar-bottom-area">
-      <a href="feed.html">
-        <svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 511 511.832"><path fill-rule="nonzero" d="M43.084 468.748h116.942V364.721c0-25.882 10.609-49.45 27.679-66.528l.082-.081c17.077-17.07 40.645-27.679 66.527-27.679 25.844 0 49.412 10.617 66.519 27.687l.082.081c17.092 17.151 27.686 40.697 27.686 66.52v104.027h119.315V253.009L255.846 51.151 43.084 253.768v214.98zm138.484 43.084H29.337c-8.09 0-15.428-3.3-20.732-8.605C3.3 497.923 0 490.585 0 482.495V244.611c.059-5.681 2.298-11.346 6.733-15.568L241.038 5.915c8.236-7.846 21.284-7.927 29.616 0l232.514 221.323c4.782 3.957 7.832 9.931 7.832 16.614v238.643c0 7.964-3.316 15.391-8.642 20.717-5.253 5.253-12.591 8.62-20.695 8.62H327.059c-11.891 0-21.542-9.651-21.542-21.542V364.721c0-14.109-5.739-26.913-14.978-36.145l-.081-.081c-9.231-9.238-22.036-14.978-36.144-14.978-14.087 0-26.913 5.762-36.189 15.015-9.253 9.276-15.014 22.102-15.014 36.189V490.29c0 11.891-9.652 21.542-21.543 21.542z"/></svg>
-      </a>
-      <a href="friends.html">
-        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"><g><path d="M384,448v-42.7c0-58.9-47.7-106.7-106.7-106.7H106.7C47.7,298.7,0,346.4,0,405.3V448c0,11.8,9.6,21.3,21.3,21.3c11.8,0,21.3-9.6,21.3-21.3v-42.7c0.1-35.3,28.7-63.9,64-64l170.7,0c35.3,0.1,63.9,28.7,64,64V448c0,11.8,9.6,21.3,21.3,21.3S384,459.8,384,448z"/><path d="M192,64v21.3c35.3,0.1,63.9,28.7,64,64c-0.1,35.3-28.7,63.9-64,64c-35.3-0.1-63.9-28.7-64-64c0.1-35.3,28.7-63.9,64-64V64V42.7c-58.9,0-106.7,47.7-106.7,106.7C85.3,208.3,133.1,256,192,256c58.9,0,106.7-47.7,106.7-106.7c0-58.9-47.7-106.7-106.7-106.7V64z"/><path d="M512,448v-42.7c0-48.6-32.9-91.1-80-103.2c-11.4-2.9-23,3.9-26,15.3c-2.9,11.4,3.9,23,15.3,26c28.2,7.3,48,32.8,48,61.9V448c0,11.8,9.6,21.3,21.3,21.3S512,459.8,512,448z"/><path d="M336,87.4c28.9,7.4,48.1,33.5,48.1,61.9c0,5.2-0.6,10.6-2,15.9c-5.8,22.6-23.5,40.3-46.1,46.1c-11.4,2.9-18.3,14.5-15.4,26c2.9,11.4,14.5,18.3,26,15.4c37.7-9.7,67.2-39.1,76.9-76.9c2.3-8.8,3.4-17.7,3.4-26.5c0-47.6-32-90.9-80.2-103.3c-11.4-2.9-23,4-26,15.4C317.7,72.9,324.6,84.5,336,87.4L336,87.4z"/></g></svg>
-      </a>
-      <a href="direct.html">
-        <svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 506 511.682"><path fill-rule="nonzero" d="M76.022 432.762c-14.224-17.624-28.477-36.009-40.468-55.504-13.738-22.329-24.838-46.442-30.326-73.172-14.057-68.387.935-136.064 36.561-190.148C77.414 59.833 133.687 19.322 202.118 5.235c68.394-14.071 136.056.928 190.14 36.547 54.105 35.632 94.638 91.912 108.71 160.35 7.003 34.067 6.445 67.452-.116 99.01-7.018 33.734-20.937 65.408-39.78 93.639-25.671 38.445-58.723 65.581-98.51 82.009-39.837 16.45-86.054 21.88-138.014 16.979l-9.714-.928c-19.966-1.928-27.528-2.653-33.487-1.094-4.343 1.181-9.932 3.69-18.842 7.677l-8.381 3.734c-20.756 9.229-36.009 10.44-47.878 6.14-15.499-5.618-22.503-17.566-25.765-33.023-1.624-7.706-2.139-15.739-2.675-24.221-.399-6.445-.841-13.231-1.784-19.292zm47.972-127.857l61.768-98.785c10.976-16.573 33.719-20.177 49.357-7.924l52.024 40.917c4.785 3.734 11.469 3.886 16.363.319l66.038-46.413c9.678-7.032 21.873 4.698 15.297 14.681l-62.355 97.785c-10.977 16.566-33.719 20.176-49.357 7.917l-52.024-40.918c-4.785-3.734-11.462-3.893-16.363-.319l-65.509 47.37c-9.671 7.032-21.872-4.64-15.239-14.63zM74.761 353.16c11.976 19.473 26.273 37.597 40.323 54.902a22.782 22.782 0 014.785 9.693c2.501 10.962 3.175 21.532 3.799 31.428.384 6.104.754 11.919 1.493 16.232 2.226-.775 5.633-2.16 10.462-4.299l8.177-3.596c11.23-5.031 18.284-8.192 25.679-10.164h.094c13.688-3.646 23.49-2.711 49.581-.188l9.716.928c44.484 4.197 83.43-.196 116.25-13.746 31.246-12.905 57.36-34.444 77.833-65.103 15.616-23.395 27.144-49.596 32.936-77.457 5.336-25.686 5.8-52.822.116-80.48-11.52-56.026-44.673-102.084-88.919-131.221-44.274-29.158-99.72-41.432-155.79-29.891-56.012 11.528-102.07 44.674-131.199 88.912-29.166 44.282-41.433 99.728-29.906 155.798 4.205 20.495 13.246 39.852 24.57 58.252z"/></svg>
-      </a>
-      <a href="explore.html" class="active-bar">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M225.38 233.37c-12.5 12.5-12.5 32.76 0 45.25 12.49 12.5 32.76 12.5 45.25 0 12.5-12.5 12.5-32.76 0-45.25-12.5-12.49-32.76-12.49-45.25 0zM248 8C111.03 8 0 119.03 0 256s111.03 248 248 248 248-111.03 248-248S384.97 8 248 8zm126.14 148.05L308.17 300.4a31.938 31.938 0 0 1-15.77 15.77l-144.34 65.97c-16.65 7.61-33.81-9.55-26.2-26.2l65.98-144.35a31.938 31.938 0 0 1 15.77-15.77l144.34-65.97c16.65-7.6 33.8 9.55 26.19 26.2z"/></svg>
-      </a>
-      <a href="profile.html">
-        <img src="./src/icon/default.jpg" alt="Perfil" class="profile-mini" id="nav-pic">
-      </a>
-    </div>
-  </div>
 
-  <!-- Modal de Idiomas -->
-  <div class="language-modal" id="languageModal">
-    <div class="language-content">
-      <div class="language-header">
-        <h3>Selecione o idioma</h3>
-        <button class="close-language-modal" id="closeLanguageModal">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
+  
+<div class="pc-alert">
+  <div class="logo-area">
+    <div class="pc-alert-logo">RealMe</div>
+  </div>
+  <div class="pc-alert-title">Indisponivel em PCs</div>
+  <div class="pc-alert-subtitle">por enquanto o realme só esta disponivel em celulares.</div>
+</div>
+
+
+
+
+<div class="post-layer" id="postLayer">
+  <div class="header-layer">
+    <h1 class="header">Nova publicação</h1> 
+    <button id="closeLayerBtn" class="back-post">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 298 511.93">
+        <path d="M285.77 441c16.24 16.17 16.32 42.46.15 58.7-16.16 16.24-42.45 16.32-58.69.16l-215-214.47c-16.24-16.16-16.32-42.45-.15-58.69L227.23 12.08c16.24-16.17 42.53-16.09 58.69.15 16.17 16.24 16.09 42.54-.15 58.7l-185.5 185.04L285.77 441z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="content-area">
+    <div class="post-content-type">
+      <div class="text-area">
+        <div class="text-input-area">
+          <textarea class="np-text-input" placeholder="Escreva seu pensamento..." maxlength="360"></textarea>
+        </div>
       </div>
-      <div class="language-options">
-        <div class="language-option" data-lang="pt">
-          <div class="language-flag">🇧🇷</div>
-          <div class="language-info">
-            <div class="language-name">Português</div>
-            <div class="language-native">Português (Brasil)</div>
-          </div>
-          <div class="language-check">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
+      <div class="file-area">
+        <div class="file-box">
+        <div class="img-btn" id="post-file-input">Adicionar imagem</div>
+        <div class="file-input-area">
         </div>
-        <div class="language-option" data-lang="en">
-          <div class="language-flag">🇺🇸</div>
-          <div class="language-info">
-            <div class="language-name">Inglês</div>
-            <div class="language-native">English</div>
-          </div>
-          <div class="language-check">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
+        <div class="image-preview-post" style="display:none;">
+          <img src="" alt="Preview">
+          <button class="remove-image-post"><i class="fas fa-times"></i></button>
         </div>
-        <div class="language-option" data-lang="ru">
-          <div class="language-flag">🇷🇺</div>
-          <div class="language-info">
-            <div class="language-name">Russo</div>
-            <div class="language-native">Русский</div>
-          </div>
-          <div class="language-check">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
-        </div>
-        <div class="language-option" data-lang="ja">
-          <div class="language-flag">🇯🇵</div>
-          <div class="language-info">
-            <div class="language-name">Japonês</div>
-            <div class="language-native">日本語</div>
-          </div>
-          <div class="language-check">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
-        </div>
-        <div class="language-option" data-lang="es">
-          <div class="language-flag">🇪🇸</div>
-          <div class="language-info">
-            <div class="language-name">Espanhol</div>
-            <div class="language-native">Español</div>
-          </div>
-          <div class="language-check">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
         </div>
       </div>
     </div>
+    <div class="post-options">
+      <div class="sections-btn">
+        <button class="send-bubble-btn" id="btn-bubble">Nota</button>
+        <button class="send-post-btn" id="btn-post">Post</button>
+      </div>
+    </div>
   </div>
+</div>
+
+
 
 
   <div class="more-overlay">
@@ -337,13 +407,23 @@
         <div class="drag-area">
           <div class="graber"></div>
         </div>
-        <div class="more-info-header">Sobre <span id="username-modal"></span></div>
+        <div class="header-libs">
+          <div class="btn-edit-header">
+            <button class="btn-edit-area btn-cancel" id="cancel-edit" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="more-info-header"><p>Sobre <span id="username-modal"></span></p></div>
+          <div class="btn-edit-header">
+            <button class="btn-edit-area btn-edit" id="open-edit" style="display:none;"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button class="btn-edit-area save-edit" id="save-view-mode" style="display:none;"><i class="fa-solid fa-check"></i></button>
+          </div>
+        </div>
       </div>
-      <div class="scroll-content">
-
+        <div class="scroll-content">
+        <div class="view-mode">
         <div class="scroll-fade-top"></div>
 
         <div class="basic-info-container">
+          <div class="safe-area-top"></div>
           <div class="info-header">Informações básicas</div>
           <div class="infos-box">
             <div class="info-label modal-info-nome">Nome: <span></span></div>
@@ -400,8 +480,74 @@
           <div class="interests-header">Outros gostos</div>
           <div class="infos-box modal-info-others"><div class="info-label"><span></span></div></div>
         </div>
-
+        <div class="safe-area"></div>
         <div class="scroll-fade-bottom"></div>
+        </div>
+        <div class="edit-mode" style="display:none;">
+        <div class="scroll-fade-top"></div>
+
+        <div class="basic-info-container">
+          <div class="safe-area-top"></div>
+          <div class="info-header">Informações básicas</div>
+          <div class="infos-box">
+            <div class="info-label modal-info-nome">Nome: <span></span></div>
+            <div class="info-label modal-info-genero">Gênero: <span></span></div>
+            <div class="info-label modal-info-aniversario">Aniversário: <span></span></div>
+            <div class="info-label modal-info-estado-civil">Status Civil: <span></span></div>
+            <div class="info-label modal-info-entrou">Entrou em: <span></span></div>
+            <div class="info-label modal-info-buscando">Buscando por:</div>
+            <textarea placeholder="O que voce esta buscando?" maxlength="160" class="edit-input"></textarea>
+            <div class="info-label modal-info-localizacao">Mora em: <span></span></div>
+          </div>
+        </div>
+
+        <div class="interests-container">
+          <div class="interests-header">Visão geral</div>
+          <div class="infos-box modal-info-overview"><div class="info-label"><textarea placeholder="Conte um pouco sobre quem você é" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="interests-container">
+          <div class="interests-header">Meu estilo</div>
+          <div class="infos-box modal-info-style"><div class="info-label"><textarea placeholder="Como você descreve seu estilo?" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="interests-container">
+          <div class="interests-header">Minha personalidade</div>
+          <div class="infos-box modal-info-personality"><div class="info-label"><textarea placeholder="O que voce esta buscando?" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="interests-container">
+          <div class="interests-header">Músicas</div>
+          <div class="infos-box modal-info-music"><div class="info-label"><textarea placeholder="Quais musicas fazem você ser quem é?" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="interests-container">
+          <div class="interests-header">Filmes e Séries</div>
+          <div class="infos-box modal-info-movies"><div class="info-label"><textarea placeholder="Quais filmes e series são a sua cara?" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="interests-container">
+          <div class="interests-header">Livros</div>
+          <div class="infos-box modal-info-books"><div class="info-label"><textarea placeholder="Conte um pouco sobre seus livros?" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="interests-container">
+          <div class="interests-header">Personagens</div>
+          <div class="infos-box modal-info-characters"><div class="info-label"><textarea placeholder="Qual personagem ou pessoa você mais gosta?" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="interests-container">
+          <div class="interests-header">Comidas e Bebidas</div>
+          <div class="infos-box modal-info-foods"><div class="info-label"><textarea placeholder="Quais comidas você ama?" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="interests-container">
+          <div class="interests-header">Hobbies</div>
+          <div class="infos-box modal-info-hobbies"><div class="info-label"><textarea placeholder="O que você faz para passar o tempo?" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="interests-container">
+          <div class="interests-header">Jogos favoritos</div>
+          <div class="infos-box modal-info-games"><div class="info-label"><textarea placeholder="O que você mais gosta de jogar?" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="interests-container">
+          <div class="interests-header">Outros gostos</div>
+          <div class="infos-box modal-info-others"><div class="info-label"><textarea placeholder="Quais são os seus outros gostos?" maxlength="160" class="edit-input"></textarea></div></div>
+        </div>
+        <div class="safe-area"></div>
+        <div class="scroll-fade-bottom"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -429,8 +575,9 @@
         </a>
         <div class="menu-divider"></div>
         <div class="section-title">Conta</div>
-        <a href="#" class="menu-item-link edit">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#f8f9f9"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V12M9 15V12.5L17.75 3.75C18.4404 3.05964 19.5596 3.05964 20.25 3.75V3.75C20.9404 4.44036 20.9404 5.55964 20.25 6.25L15.5 11L11.5 15H9Z" stroke="#f8f9f9" stroke-width="1.8719999999999999" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg><span>Editar Perfil</span>
+        <a href="edit.html" class="menu-item-link edit">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#f8f9f9"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V12M9 15V12.5L17.75 3.75C18.4404 3.05964 19.5596 3.05964 20.25 3.75V3.75C20.9404 4.44036 20.9404 5.55964 20.25 6.25L15.5 11L11.5 15H9Z" stroke="#f8f9f9" stroke-width="1.8719999999999999" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+          <span>Editar Perfil</span>
         </a>
         <div class="menu-divider"></div>
         <div class="section-title">Mais opções</div>
@@ -457,14 +604,17 @@
   <!-- Navbar Top -->
   <nav class="navbar-top">
     <div class="top-left">
-      <a href="index.html">
+      <button onclick="window.history.back()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 298 511.93">
           <path d="M285.77 441c16.24 16.17 16.32 42.46.15 58.7-16.16 16.24-42.45 16.32-58.69.16l-215-214.47c-16.24-16.16-16.32-42.45-.15-58.69L227.23 12.08c16.24-16.17 42.53-16.09 58.69.15 16.17 16.24 16.09 42.54-.15 58.7l-185.5 185.04L285.77 441z"/>
         </svg>
-      </a>
+      </button>
       <h2 id="headername">usuario</h2>
     </div>
     <div class="top-right">
+      <a style="display:none;" id="create-post-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Layer_x0020_1"><path  fill-rule="nonzero" d="M154.914 0l202.172 0c42.619,0 81.357,17.421 109.425,45.489l1.202 1.306c27.36,28.002 44.287,66.208 44.287,108.119l0 202.172c0,42.619 -17.421,81.357 -45.489,109.425 -28.068,28.068 -66.806,45.489 -109.425,45.489l-202.172 0c-42.545,0 -81.268,-17.443 -109.381,-45.533 -28.112,-28.024 -45.533,-66.762 -45.533,-109.381l0 -202.172c0,-42.523 17.421,-81.231 45.489,-109.336l0.089 -0.089c28.156,-28.09 66.842,-45.489 109.336,-45.489zm79.607 126.587c0,-11.857 9.621,-21.479 21.479,-21.479 11.858,0 21.479,9.622 21.479,21.479l0 107.934 107.934 0c11.857,0 21.479,9.621 21.479,21.479 0,11.858 -9.622,21.479 -21.479,21.479l-107.934 0 0 107.934c0,11.857 -9.621,21.479 -21.479,21.479 -11.858,0 -21.479,-9.622 -21.479,-21.479l0 -107.934 -107.934 0c-11.857,0 -21.479,-9.621 -21.479,-21.479 0,-11.858 9.622,-21.479 21.479,-21.479l107.934 0 0 -107.934zm122.565 -83.629l-202.172 0c-30.828,0 -58.815,12.573 -79.055,32.813l-0.088 0.088c-20.24,20.24 -32.813,48.227 -32.813,79.055l0 202.172c0,30.762 12.603,58.756 32.901,79.055l0 0.088c20.24,20.24 48.227,32.813 79.055,32.813l202.172 0c30.762,0 58.756,-12.603 79.055,-32.901 20.298,-20.299 32.901,-48.293 32.901,-79.055l0 -202.172c0,-30.312 -12.16,-57.878 -31.802,-78.029l-1.099 -1.026c-20.299,-20.298 -48.293,-32.901 -79.055,-32.901z"/></g></svg>
+      </a>
       <a id="open-settings-btn">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 95.95">
           <g><path d="M8.94,0h105c4.92,0,8.94,4.02,8.94,8.94l0,0c0,4.92-4.02,8.94-8.94,8.94h-105C4.02,17.88,0,13.86,0,8.94l0,0 C0,4.02,4.02,0,8.94,0L8.94,0z M8.94,78.07h105c4.92,0,8.94,4.02,8.94,8.94l0,0c0,4.92-4.02,8.94-8.94,8.94h-105 C4.02,95.95,0,91.93,0,87.01l0,0C0,82.09,4.02,78.07,8.94,78.07L8.94,78.07z M8.94,39.03h105c4.92,0,8.94,4.02,8.94,8.94l0,0 c0,4.92-4.02,8.94-8.94,8.94h-105C4.02,56.91,0,52.89,0,47.97l0,0C0,43.06,4.02,39.03,8.94,39.03L8.94,39.03z"/></g>
@@ -474,6 +624,8 @@
   </nav>
 
   <!-- Profile Container -->
+  <div class="page-content-pc-container">
+    <div class="page-pc-area">
   <div class="full-profile-container">
     <div class="pf-banner-area">
       <div class="profile-banner"></div>
@@ -485,22 +637,22 @@
         </div>
         <div class="profile-info-block">
           <div class="name-line">
-            <h2 class="profile-name" id="displayname">username</h2>
+            <h2 class="profile-name" id="displayname">usuario</h2>
             <span class="verificado"><i class="fas fa-check-circle"></i></span>
             <div class="handle" id="username"></div>
           </div>
           <div class="profile-stats">
             <div class="stat-item">
               <span class="stat-count" id="amigosCount">0</span>
-              <span class="stat-label">amigos</span>
+              <span class="stat-label">posts</span>
             </div>
             <div class="stat-item">
               <span class="stat-count" id="seguidoresCount">0</span>
-              <span class="stat-label">seguidores</span>
+              <span class="stat-label">curtidas</span>
             </div>
             <div class="stat-item">
               <span class="stat-count" id="seguindoCount">0</span>
-              <span class="stat-label">seguindo</span>
+              <span class="stat-label">visitas</span>
             </div>
           </div>
         </div>
@@ -508,33 +660,43 @@
       <div class="bio">
         <p id="bio"></p>
       </div>
-      <div class="view-more">Ver mais sobre <span id="view-more-username"></span></div>
-      <div class="actions-btn">
-        <!--perfil dos outros-->
-        <button class="action-btn pf">Adicionar Amigo</button>
-        <!--seu perfil-->
-        <button class="action-btn mypf">Editar</button>
-        <button class="action-btn">Compartilhar perfil</button>
-        <button class="action-btn sugestions"><i class="fas fa-user"></i></button>
-      </div>
       <div class="music">
-        <button id="btnPauseMusic" class="iframe-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-            <path fill-rule="nonzero" d="M255.99 0c70.68 0 134.7 28.66 181.02 74.98C483.33 121.3 512 185.31 512 256c0 70.68-28.67 134.69-74.99 181.01C390.69 483.33 326.67 512 255.99 512S121.3 483.33 74.98 437.01C28.66 390.69 0 326.68 0 256c0-70.67 28.66-134.7 74.98-181.02C121.3 28.66 185.31 0 255.99 0zm77.4 269.81c13.75-8.88 13.7-18.77 0-26.63l-110.27-76.77c-11.19-7.04-22.89-2.9-22.58 11.72l.44 154.47c.96 15.86 10.02 20.21 23.37 12.87l109.04-75.66z"/>
-          </svg>
+        <button id="btnPauseMusic" class="iframe-btn" aria-label="Tocar música do perfil">
+          <div class="svg-music" id="pause">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 122.88" style="enable-background:new 0 0 122.88 122.88" xml:space="preserve"><g><path d="M61.44,0c16.97,0,32.33,6.88,43.44,18c11.12,11.12,18,26.48,18,43.44c0,16.97-6.88,32.33-18,43.44 c-11.12,11.12-26.48,18-43.44,18c-16.97,0-32.33-6.88-43.44-18C6.88,93.77,0,78.41,0,61.44C0,44.47,6.88,29.11,18,18 C29.11,6.88,44.47,0,61.44,0L61.44,0z M42.3,39.47h13.59v43.95l-13.59,0V39.47L42.3,39.47L42.3,39.47z M66.99,39.47h13.59v43.95 l-13.59,0V39.47L66.99,39.47L66.99,39.47z M97.42,25.46c-9.21-9.21-21.93-14.9-35.98-14.9c-14.05,0-26.78,5.7-35.98,14.9 c-9.21,9.21-14.9,21.93-14.9,35.98s5.7,26.78,14.9,35.98c9.21,9.21,21.93,14.9,35.98,14.9c14.05,0,26.78-5.7,35.98-14.9 c9.21-9.21,14.9-21.93,14.9-35.98S106.63,34.66,97.42,25.46L97.42,25.46z"/></g></svg>
+          </div>
+          <div class="svg-music active" id="play">
+            <svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 512"><path fill-rule="nonzero" d="M255.99 0c70.68 0 134.7 28.66 181.02 74.98C483.33 121.3 512 185.31 512 256c0 70.68-28.67 134.69-74.99 181.01C390.69 483.33 326.67 512 255.99 512S121.3 483.33 74.98 437.01C28.66 390.69 0 326.68 0 256c0-70.67 28.66-134.7 74.98-181.02C121.3 28.66 185.31 0 255.99 0zm77.4 269.81c13.75-8.88 13.7-18.77 0-26.63l-110.27-76.77c-11.19-7.04-22.89-2.9-22.58 11.72l.44 154.47c.96 15.86 10.02 20.21 23.37 12.87l109.04-75.66zm79.35-170.56c-40.1-40.1-95.54-64.92-156.75-64.92-61.21 0-116.63 24.82-156.74 64.92-40.1 40.11-64.92 95.54-64.92 156.75 0 61.22 24.82 116.64 64.92 156.74 40.11 40.11 95.53 64.93 156.74 64.93 61.21 0 116.65-24.82 156.75-64.93 40.11-40.1 64.93-95.52 64.93-156.74 0-61.22-24.82-116.64-64.93-156.75z"/></svg>
+          </div>
         </button>
-        <span id="musicTitle" style="margin-left:8px;font-weight:500;">Reckoner Radiohead</span>
+        <div class="music-bars">
+          <div class="music-bar"></div>
+          <div class="music-bar"></div>
+          <div class="music-bar"></div>
+        </div>
+        <span id="musicTitle"></span>
       </div>
-    </div>
+
+      <div class="view-more">Ver mais sobre <span id="view-more-username">usuario</span></div>
+
+      <div class="actions-btn">
+        <button class="action-btn friend  mypf">Curtir</button>
+        <button class="action-btn share">Compartilhar perfil</button>
+      </div>
+  </div>
+
+    <div id="music-player"></div>
+
 
     <!-- Profile Menu -->
 <!-- Profile Menu -->
+ <div class="main-profile">
 <div class="menu-placeholder"></div>
 <div class="profile-menu-area" id="profileMenu">
   <div class="profile-menu">
-    <button class="menu-item active" data-tab="0"><i class="fa-solid fa-address-card"></i></button>
-    <button class="menu-item" data-tab="1"><i class="fa-solid fa-repeat"></i></button>
-    <button class="menu-item" data-tab="2"><i class="fas fa-link"></i></button>
+    <button class="menu-item active" data-tab="0"><i class="fa-solid fa-address-card"></i><p> Mural</p></button>
+    <button class="menu-item" data-tab="1"><i class="fa-solid fa-repeat"></i><p> Reposts</p></button>
+    <button class="menu-item" data-tab="2"><i class="fas fa-link"></i><p> Links</p></button>
   </div>
   <div class="menu-select">
     <div class="slider">
@@ -546,11 +708,18 @@
     <!-- Profile Body -->
     <div class="profile-body">
       <div class="tabs-container">
-        <!-- Tab 1: Visão — esvaziada, conteúdo no modal -->
-        <div class="tab visao-tab"></div>
+        <div class="tab visao-tab">  <div id="muralPosts"></div></div>
+
 
         <!-- Tab 2: Gostos — esvaziada, conteúdo no modal -->
-        <div class="tab gostos-tab"></div>
+        <div class="tab gostos-tab">
+          <div class="about-box" style="text-align:center;padding:30px;">
+      <div class="icon-area"><div class="icon-place">
+        <i class="fa-solid fa-repeat" style="font-size:38px;color:#fff;"></i></div></div>
+      <h3 style="color:#fff;margin-bottom:12px;">Nenhum repost ainda</h3>
+      <p style="color:#555;">Este usuário ainda não fez nenhum repost</p>
+    </div>
+        </div>
 
         <!-- Tab 3: Links -->
         <div class="tab links-tab">
@@ -558,32 +727,44 @@
         </div>
       </div>
     </div>
+ </div>
 
-    <div class="profiles-banner">
-      <div class="about-profiles">
-        <div class="msg-profiles">Saiba mais sobre o Profile's</div>
+  </div>
+  </div>
+  </div>
+
+
+
+        </div>
       </div>
     </div>
   </div>
 <script>
+document.addEventListener('DOMContentLoaded', () => {
   // Menu Lateral
   const menuOverlay = document.getElementById('menuOverlay');
-  const openMenuBtn = document.getElementById('open-settings-btn');
+  const openMenuBtns = document.querySelectorAll('[id="open-settings-btn"]');
   const closeMenuBtn = document.getElementById('closeMenu');
 
-  openMenuBtn.addEventListener('click', () => {
-    menuOverlay.classList.add('active');
+  openMenuBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (menuOverlay) menuOverlay.classList.add('active');
+    });
   });
 
-  closeMenuBtn.addEventListener('click', () => {
-    menuOverlay.classList.remove('active');
-  });
+  if (closeMenuBtn) {
+    closeMenuBtn.addEventListener('click', () => {
+      if (menuOverlay) menuOverlay.classList.remove('active');
+    });
+  }
 
-  menuOverlay.addEventListener('click', (e) => {
-    if (e.target === menuOverlay) {
-      menuOverlay.classList.remove('active');
-    }
-  });
+  if (menuOverlay) {
+    menuOverlay.addEventListener('click', (e) => {
+      if (e.target === menuOverlay) {
+        menuOverlay.classList.remove('active');
+      }
+    });
+  }
 
   // Sticky Menu on Scroll
   const profileMenu = document.getElementById('profileMenu');
@@ -862,8 +1043,9 @@
       moreModal.style.transform  = 'translateY(0)';
     }
   }
+}); // DOMContentLoaded
 </script>
-<script type="module" src="./languages.json"></script>
-<script type="module" src="./src/js/profiles.js"></script> 
+<script src="https://www.youtube.com/iframe_api"></script>
+<script type="module" src="./src/js/profiles.js"></script>
 </body>
 </html>
