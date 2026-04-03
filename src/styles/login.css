@@ -74,7 +74,7 @@ label {
   font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 6px;
-  font-weight: 500;
+  font-weight: lighter;
   display: block;
 }
 

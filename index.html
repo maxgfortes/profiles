@@ -248,14 +248,13 @@
       align-items: center;
       padding: 42px 12px 24px;
       gap: 16px;
-      flex-wrap: wrap;
     }
 
     .welcome-btns a {
-      background: #63cbff;
-background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226, 1) 50%, rgba(99, 203, 255, 1) 100%);
+      background: #4A90E2;
       border: none;
       padding: 16px 32px;
+      width: 100%;
       color: #fff;
       border-radius: 12px;
       font-size: 1.1rem;
@@ -263,12 +262,10 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
       text-decoration: none;
       font-weight: 600;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 4px 20px #4a91e280;
     }
 
     .welcome-btns a:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 30px #4a90e280;
     }
 
     .criar-conta {
@@ -278,8 +275,6 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
     .entrar {
       background: transparent !important;
       border: 2px solid;
-      background: #63cbff;
-background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226, 1) 50%, rgba(99, 203, 255, 1) 100%);
       box-shadow: none !important;
     }
 
@@ -294,9 +289,7 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
     }
 
     .see-profile a {
-      background: #63cbff;
-background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226, 1) 50%, rgba(99, 203, 255, 1) 100%);
-      padding: 16px 32px;
+      background: #4A90E2;   padding: 16px 32px;
       color: #fff;
       border-radius: 14px;
       width: 100%;
@@ -310,12 +303,14 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
     .profiles-preview {
       padding: 30px 0;
       max-width: 900px;
+      aspect-ratio: 1/1.2;
       margin: 0 auto;
     }
 
     .profiles-preview img {
       width: 100%;
       border-radius: 16px;
+      display: none;
     }
 
     .features-section {
@@ -347,9 +342,6 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
     }
 
     .feature-card {
-      background: rgba(26, 26, 26, 0.6);
-      backdrop-filter: blur(10px);
-      border: 1px solid #2a2a2a;
       border-radius: 16px;
       padding: 30px;
       transition: transform 0.3s ease, border-color 0.3s ease;
@@ -357,7 +349,6 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
 
     .feature-card:hover {
       transform: translateY(-5px);
-      border-color: #4a90e280;
     }
 
     .feature-icon {
@@ -395,8 +386,6 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
     }
 
     .faq-item {
-      background: rgba(26, 26, 26, 0.6);
-      border: 1px solid #2a2a2a;
       border-radius: 12px;
       margin-bottom: 16px;
       overflow: hidden;
@@ -411,9 +400,7 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
       transition: background 0.3s ease;
     }
 
-    .faq-question:hover {
-      background: rgba(40, 40, 40, 0.6);
-    }
+
 
     .faq-question h3 {
       font-size: 18px;
@@ -529,11 +516,6 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
   </style>
 </head>
 <body>
-  <nav>
-    <div class="navarea">
-      <div class="logo">Profile</div>
-    </div>
-  </nav>
   <div class="main">
     <div class="welcome-container-pc">
       <div class="profiles-preview-pc">
@@ -654,7 +636,7 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
         </div>
         <div class="faq-answer">
           <div class="faq-answer-content">
-            Sim! O ReealMe é 100% gratuito. Você pode criar sua conta, achar amigos e personalizar seu perfil sem pagar nada.
+            Sim! O Profile é 100% gratuito. Você pode criar sua conta, achar amigos e personalizar seu perfil sem pagar nada.
           </div>
         </div>
       </div>
@@ -730,7 +712,7 @@ background: linear-gradient(130deg, rgba(99, 203, 255, 1) 0%, rgba(74, 144, 226,
           document.getElementById('userInfo').classList.add('active');
           document.getElementById('authButtons').style.display = 'none';
           document.getElementById('profileButton').classList.add('active');
-          document.getElementById('profileLink').href = `feed.html`;
+          document.getElementById('profileLink').href = `profile.html`;
         }
       }
     });
